@@ -1,0 +1,388 @@
+
+
+\documentclass[12pt]{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{minted}% 语法高亮和代码样式设置方面更加强大和灵活
+\usepackage{epstopdf}
+\usepackage{algorithm}
+\usepackage{ctex}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\tcbuselibrary{minted}
+\usemintedstyle{paraiso-dark}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+\title{初识MySQL}
+\author{2353113 李阔}
+\date{\today}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=3cm}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+\section{MySQL的安装}
+	{\songti 因为linux操作系统对于编程者的优越性，
+		本报告的mysql安装部分主要介绍在linux虚拟机上安装MySQL，
+		而Windows操作系统的MySQL的安装过程则会简要介绍。
+		先介绍linux虚拟机的安装，我了解到个人用户安装linux操作系统一般会使用Ubuntu，于是我按照网上的各种教程配置了基于linux内核的Ubuntu虚拟机，设置如下图：
+
+  %\includegraphics[height=15cm]{1.png}
+  \begin{figure}[htbp]
+\centering
+\includegraphics[scale=0.4]{1.png}
+\caption{虚拟机参数设置}
+\label{figure}
+\end{figure}
+	}
+ 	{\songti 成功安装虚拟机后，在linux命令行窗口继续执行以下命令：
+	}
+
+
+
+\begin{lstlisting}[language=Bash]
+        sudo apt-get updat
+        sudo apt-get install mysql-server
+        sudo apt-get install mysql-client
+
+\end{lstlisting}
+
+
+{\songti
+
+%第一次在虚拟机登陆mysql时已设置了默认密码，需要手动查看   
+
+    注：mysql-server 是MySQL核心程序将安装MySQL数据库服务器，用于生成管理多个数据库实例，持久保存数据并将其提供查询接口（SQL），供不同客户端调用。
+
+mysql-client 是操作数据库实例的工具，允许连接到MySQL服务器使用该查询接口。它将为您提供MySQL命令行程序。
+
+如果只需要连接到远程服务器并运行查询，只安装mysql-client就可以了。如果是服务器只提供连接服务的只需要安装mysql-server
+
+
+}
+\subsection{配置MySQL}
+{\songti 运行初始化安全脚本}
+\begin{lstlisting}[language=Bash]
+        sudo mysql_secure_installation
+\end{lstlisting}
+
+
+\section{MySQL数据库的基本使用}
+\subsection{启动MySQL数据库服务}
+
+\begin{lstlisting}[language=Bash]
+        sudo service mysql start
+\end{lstlisting}
+\subsection{停止MySQL数据库服务}
+\begin{lstlisting}[language=Bash]
+        sudo service mysql stop
+\end{lstlisting}
+\subsection{查看MySQL运行状态}
+\begin{lstlisting}[language=Bash]
+        sudo service mysql status
+\end{lstlisting}
+
+\section{MySQL创建用户与授权}
+\subsection{使用root用户登陆}
+{\songti 第一次以root用户在虚拟机登陆mysql时已设置了默认密码，需要手动查看，即在linux命令行窗口输入一下指令：}
+\begin{lstlisting}[language=Bash]
+        sudo cat /etc/mysql/debian.cnf
+\end{lstlisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{3.png}
+    \caption{查找默认密码}
+    \label{fig:enter-label}
+\end{figure}
+
+{\songti 记住密码后再以以下指令登陆：（输入在指令后会要求输入密码）}
+\begin{lstlisting}[language=Bash]
+        mysql -u root -p
+\end{lstlisting}
+
+\begin{figure}[htbp]
+        \centering
+        \includegraphics[width=0.8\linewidth]{2.png}
+        \caption{登陆成功}
+        \label{fig:enter-label}
+\end{figure}
+{\songti 可以将密码修改为个人常用密码}
+
+\section{使用数据库}
+\subsection{显示所有数据库}
+         
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+SHOW DATABASES;
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Screenshot 2024-09-14 162915.png}
+    \caption{Enter Caption}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{新建数据库}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+CREATE DATABASE TEST1;
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-14 162936.png}
+    \caption{数据库列表}
+    \label{fig:enter-label}
+\end{figure}
+{\songti 再输入显示所有数据库命令，就可以看到我们新建的数据库出现在列表中：}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Screenshot 2024-09-14 163017.png}
+    \caption{数据库列表}
+    \label{fig:enter-label}
+\end{figure}
+\subsection{删除数据库}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+DROP DATABASE TEST1;
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 122411.png}
+    \caption{删除数据库}
+    \label{fig:enter-label}
+\end{figure}
+{\songti 再输入SHOW DATABASDES;的语句就可以发现，我们刚刚创建的数据库已经被删除了}
+\subsection{选择数据库}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+create DATABASE demo1;
+use demo1;
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Screenshot 2024-09-15 122708.png}
+    \caption{创建并选择数据库}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{创建数据表}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    birthdate DATE,
+    is_active BOOLEAN DEFAULT TRUE
+);
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Screenshot 2024-09-15 124246.png}
+    \caption{创建数据表}
+    \label{fig:enter-label}
+\end{figure}
+{\songti 
+id: 用户 id，整数类型，自增长，作为主键 \\
+username: 用户名，变长字符串，不允许为空 \\
+birthdate: 用户的生日，日期类型 \\
+is\_active: 用户是否已经激活，布尔类型，默认值为 true \\
+}
+\subsection{删除数据表}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+drop TABLE users;
+\end{tcblisting}
+\subsection{插入数据}
+\subsubsection{插入单个数据}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+INSERT INTO users (username,  birthdate, is_active)
+VALUES ('test1', '1990-01-01', true);
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 130855.png}
+    \caption{插入单个数据}
+    \label{fig:enter-label}
+\end{figure}
+\subsubsection{插入多组数据}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+INSERT INTO users (username,  birthdate, is_active)
+VALUES
+    ('test2',  '1985-07-10', true),
+    ('test3',  '1988-11-25', false),
+    ('test4',  '1993-05-03', true);
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 131109.png}
+    \caption{插入多组数据}
+    \label{fig:enter-label}
+\end{figure}
+\subsection{查找数据}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+-- 使用where子句
+SELECT * FROM users WHERE is_active = true;
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 132006.png}
+    \caption{查找激活状态的用户}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+-- 使用or逻辑符
+SELECT * FROM users WHERE is_active = TRUE OR birthdate < '1990-01-01';
+\end{tcblisting}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 132807.png}
+    \caption{使用or查询}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{UPDATE更新}
+\begin{tcblisting}{listing engine=minted,boxrule=0.1mm,
+colback=blue!5!white,colframe=blue!75!black,
+listing only,left=5mm,enhanced,sharp corners=all,
+overlay={\begin{tcbclipinterior}\fill[red!20!blue!20!white] (frame.south west)
+rectangle ([xshift=5mm]frame.north west);\end{tcbclipinterior}},
+minted language=mysql,
+minted style=tango,
+minted options={fontsize=\small,breaklines,autogobble,linenos,numbersep=3mm}}
+UPDATE users
+SET is_active=false
+WHERE username='test1';
+\end{tcblisting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 133737.png}
+    \caption{将test1用户的激活状态更新为false}
+    \label{fig:enter-label}
+\end{figure}
+
+{\songti 然后我们再查询激活状态为false的用户，则包括了test1，说明我们的update生效了}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2024-09-15 133745.png}
+    \caption{显示激活状态为false的用户}
+    \label{fig:enter-label}
+\end{figure}
+\newpage
+\section{总结}
+{\songti 
+    坦白说，这次报告的前期还是比较波折的，涉及到操作系统的选择，以及排版工具的选择。考虑到之前没有怎么接触过linux也没有装过虚拟机，便想以此次作业为契机，在我的电脑上安装linux内核的虚拟机，而操作系统的选择，我曾问过学长，自己也在网上查询过资料，最终在centOS和Ubuntu之间选择了Ubuntu,因为我了解到centOS较多用于企业服务器端，而初linux初学者以及个人用户一般更倾向于使用Ubuntu，因为Ubuntu有比较简单的安装过程和图形化界面以及社区论坛，对新手更加友好。\\
+    
+    而排版工具的选择也是摇摆不定，一开始选择latex，因为其美观并且我之前曾使用过这两大原因我开始着手在本地的latex编译器Texstudio上进行latex的编译工作，而由于很长时间不使用latex，发现我在有一些排版想法时却不能实现，出现各种报错，于是我开始逐渐放弃使用latex排版，进而选择学习成本更低更加轻量的markdown语言进行排版，而上手后却发现版面实在是不太美观，而我意识到语气花费一定的学习成本去使mardown排版达到一定的美观程度，不如使用latex，如果能比较熟练地掌握latex,其在以后的其他课的报告撰写上将受益无穷，所以我又转而使用了在线的latex编译器overleaf内嵌了XeLatex。\\
+    
+    而基本的MySQL语句的学习到没有遇到太大的障碍，就是第一次登陆时查找初始默认的密码时看了不少教程，花费了我不少时间。\\
+    
+    而目前，以我的个人理解，我了解到类似于MySQL这样数据库的应用要与前端的接口进行匹配，比如作为一个网站或者一个小程序的后端，而这些都是我的盲区，所以我现在的课余学习目标就暂时为学习一定简单的前端技术，并着重学习前后端的接口以及后端的数据处理。\\
+
+    这次报告只是载体，而他真正地让我在撰写报告中学会很多东西，比如linux虚拟机的基本知识，MySQl的基本语句等等。
+    
+    
+
+
+}
+
+
+
+\end{document}
